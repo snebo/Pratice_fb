@@ -8,6 +8,24 @@
 <body>
     <h2>Getting started with Firebase</h2>
     
+    <hr>
+    <p>try adding a new book</p>
+    <form class="add">
+        <label for="title">Title:</label>
+        <input type="text" name="title" id="title" required>
+        <label for="author">Book Author: </label>
+        <input type="text" name="author" id="author" required>
+
+        <button>Add</button>
+    </form>
+
+    <hr>
+    <form class="delete">
+        <p>Delete a book!</p>
+    <label for="id">Bood id</label>
+    <input type="text" name="id" id="bookId" required>
+    <button>Delete!</button>
+    </form>
 
     <script src="bundle.js"></script>
 </body>

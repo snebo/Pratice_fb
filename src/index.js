@@ -1,7 +1,9 @@
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 import {initializeApp} from 'firebase/app'
-import {getFirestore, collection, getDocs} from 'firebase/firestore'
+import {getFirestore, collection, getDocs, onSnapshot} from 'firebase/firestore'
 // import { snapshot } from 'node:test';
+// addDoc for creating a new document to a specific collection
+import {addDoc, deleteDoc, doc} from 'firebase/firestore'
 
 const firebaseConfig = {
     apiKey: "AIzaSyATllaV9CO9I957w87Hz973CzhYoOhI9RE",
@@ -22,16 +24,50 @@ const db = getFirestore()
 const colRef = collection(db, 'books')
 
 // basically loads the collexction and returns a promise
-getDocs(colRef)
-    .then((snapshot) =>{
-    // console.log(snapshot.docs) // docs represents all fo the data
+// getDocs(colRef)
+//     .then((snapshot) =>{
+//     // console.log(snapshot.docs) // docs represents all fo the data
+//     let books = []
+//     snapshot.docs.forEach((doc)=>{
+//         books.push({...doc.data(), id: doc.id})
+//     })
+//     console.log(books)
+// })
+// .catch(err =>{
+//     console.log(err.message)
+// })
+
+onSnapshot(colRef, (snapshot) =>{
     let books = []
-    snapshot.docs.forEach((doc)=>{
-        books.push({...doc.data(), id: doc.id})
+    snapshot.books.forEach((doc)=>{
+        books.push({...doc.data(), id:doc.id})
     })
     console.log(books)
 })
-.catch(err =>{
-    console.log(err.message)
+
+// create Document
+const newBookForm = document.querySelector('.add')
+newBookForm.addEventListener('submit', (e) =>{
+    e.preventDefault()
+    addDoc(colRef, {
+        title: newBookForm.title.value,
+        author: newBookForm.author.value,
+    }).then(() => {
+        newBookForm.reset() // resets the fields
+    })
 })
-  
+
+//delete Book
+const deleteBookForm = document.querySelector('.delete')
+deleteBookForm.addEventListener('submit', (e) =>{
+    e.preventDefault()
+
+    // get refrence to the doucments we want to delete
+    const docRef = doc(db, 'books', deleteBookForm.id.value)
+    deleteDoc(docRef).then(()=>{
+        deleteBookForm.reset()
+    })
+})
+
+// for update, i can refrence a db her and probable change the
+// value as a placehold for the database
