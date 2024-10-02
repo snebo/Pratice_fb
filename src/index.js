@@ -37,10 +37,11 @@ const colRef = collection(db, 'books')
 //     console.log(err.message)
 // })
 
+// adding realtime updates
 onSnapshot(colRef, (snapshot) =>{
     let books = []
-    snapshot.books.forEach((doc)=>{
-        books.push({...doc.data(), id:doc.id})
+    snapshot.docs.forEach((doc)=>{
+        books.push({...doc.data(), id: doc.id})
     })
     console.log(books)
 })
