@@ -7,7 +7,7 @@ import {getFirestore, collection, getDocs, onSnapshot, query} from 'firebase/fir
 import {addDoc, deleteDoc, doc,  where} from 'firebase/firestore'
 // for ordering collection entries
 import { orderBy, serverTimestamp } from 'firebase/firestore';
-import { getDoc } from 'firebase/firestore';
+import { getDoc, updateDoc } from 'firebase/firestore';
 
 const firebaseConfig = {
     apiKey: "AIzaSyATllaV9CO9I957w87Hz973CzhYoOhI9RE",
@@ -79,10 +79,25 @@ deleteBookForm.addEventListener('submit', (e) =>{
     })
 })
 
+// getting a single book
 const docRef = doc(db, 'books', '1QYf3paOXyUc4RGAuVUT')
 getDoc(docRef).then((doc) =>{
     console.log(doc.data(), doc.id)
 })
 onSnapshot(docRef, (doc)=>{
     console.log(doc.data(), doc.id)
+})
+
+// updating a book
+const updateBook = document.querySelector('.update')
+updateBook.addEventListener('submit', (e) =>{
+    e.preventDefault()
+    const docRef = doc(db, 'books', updateForm.id.value)
+
+    updateDoc(docRef, {
+        title: 'updated'
+
+    }).then(()=>{
+        updateForm.reset()
+    })
 })
