@@ -1,9 +1,13 @@
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 import {initializeApp} from 'firebase/app'
-import {getFirestore, collection, getDocs, onSnapshot} from 'firebase/firestore'
+import {getFirestore, collection, getDocs, onSnapshot, query} from 'firebase/firestore'
 // import { snapshot } from 'node:test';
 // addDoc for creating a new document to a specific collection
-import {addDoc, deleteDoc, doc} from 'firebase/firestore'
+// query and wbere for queryign
+import {addDoc, deleteDoc, doc,  where} from 'firebase/firestore'
+// for ordering collection entries
+import { orderBy, serverTimestamp } from 'firebase/firestore';
+import { getDoc } from 'firebase/firestore';
 
 const firebaseConfig = {
     apiKey: "AIzaSyATllaV9CO9I957w87Hz973CzhYoOhI9RE",
@@ -23,6 +27,10 @@ const db = getFirestore()
 //collection refrence
 const colRef = collection(db, 'books')
 
+// queries
+// const q  = query(colRef, where("author", "==", "very poor man"), orderBy('createdAt'))
+const q = query(colRef, where("author", "==", "very poor man"))
+
 // basically loads the collexction and returns a promise
 // getDocs(colRef)
 //     .then((snapshot) =>{
@@ -38,7 +46,7 @@ const colRef = collection(db, 'books')
 // })
 
 // adding realtime updates
-onSnapshot(colRef, (snapshot) =>{
+onSnapshot(q, (snapshot) =>{
     let books = []
     snapshot.docs.forEach((doc)=>{
         books.push({...doc.data(), id: doc.id})
@@ -53,6 +61,7 @@ newBookForm.addEventListener('submit', (e) =>{
     addDoc(colRef, {
         title: newBookForm.title.value,
         author: newBookForm.author.value,
+        createdAt: serverTimestamp(),
     }).then(() => {
         newBookForm.reset() // resets the fields
     })
@@ -70,5 +79,10 @@ deleteBookForm.addEventListener('submit', (e) =>{
     })
 })
 
-// for update, i can refrence a db her and probable change the
-// value as a placehold for the database
+const docRef = doc(db, 'books', '1QYf3paOXyUc4RGAuVUT')
+getDoc(docRef).then((doc) =>{
+    console.log(doc.data(), doc.id)
+})
+onSnapshot(docRef, (doc)=>{
+    console.log(doc.data(), doc.id)
+})

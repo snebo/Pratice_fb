@@ -8,5 +8,12 @@ module.exports = {
         path: path.resolve(__dirname, 'dist'),
         filename: 'bundle.js'
     },
+    resolve: {
+        fallback: {
+            path: false,
+            os: false,
+            crypto: false,
+          },
+      },
     watch: true // make changes live
 }
